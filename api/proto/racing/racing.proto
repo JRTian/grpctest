@@ -11,6 +11,11 @@ service Racing {
   rpc ListRaces(ListRacesRequest) returns (ListRacesResponse) {
     option (google.api.http) = { post: "/v1/list-races", body: "*" };
   }
+
+  // fetch a race by id added By Gary Tian
+  rpc GetRace(GetRaceRequest) returns (GetRaceResponse) {
+    option (google.api.http) = { post: "/v1/get-race", body: "*" };
+  }
 }
 
 /* Requests/Responses */
@@ -20,7 +25,7 @@ message ListRacesRequest {
   ListRacesRequestFilter filter = 1;
   optional ListRacesRequestOrderBy order_by = 2;
 }
-
+ 
 //message for doing ordering by
 message ListRacesRequestOrderBy {
   string order_by = 3; // column name in race
@@ -32,6 +37,17 @@ message ListRacesResponse {
   // repeated Race races = 1;
   // modified by Gary, keep the original Race
   repeated RaceWithStatus races = 1;
+}
+
+/* Request to GetRace call. */
+
+message GetRaceRequest {
+  int64 id = 1;
+}
+
+// Response to GetRace call.
+message GetRaceResponse {
+  RaceWithStatus race = 1;
 }
 
 // Filter for listing races.

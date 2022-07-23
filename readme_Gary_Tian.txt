@@ -41,3 +41,17 @@ Task 3. add status
     (3) new return is like
     {"id":"418","meetingId":"418","name":"Massachusetts black cats","number":"1","visible":false,"advertisedStartTime":"2022-07-22T20:17:43Z","status":"CLOSED"},
     {"id":"419","meetingId":"419","name":"Arkansas elves","number":"5","visible":false,"advertisedStartTime":"2022-07-25T05:36:55Z","status":"OPEN"}
+
+Task 4. get race by id
+    (1) added the new rpc
+    (2) updated db model to query race by id
+    (3) result
+        Request
+        curl -X "POST" "http://localhost:8000/v1/get-race" \
+            -H 'Content-Type: application/json' \
+            -d $'{
+        "id": 1}
+        }'
+
+        Response
+        {"race":{"id":"1", "meetingId":"5", "name":"North Dakota foes", "number":"2", "visible":false, "advertisedStartTime":"2021-03-03T01:30:57Z", "status":"CLOSED"}}PolyMacs-MBP:api polymac$ 

@@ -1,6 +1,7 @@
 package db
 
 import (
+	"strconv"
 	// "log"
 	"database/sql"
 	"github.com/golang/protobuf/ptypes"
@@ -19,6 +20,9 @@ type RacesRepo interface {
 
 	// List will return a list of races.
 	List(filter *racing.ListRacesRequestFilter, orderBy *racing.ListRacesRequestOrderBy) ([]*racing.Race, error)
+
+	// Get race by id
+	GetRace(req *racing.GetRaceRequest) (*racing.Race, error)
 }
 
 type racesRepo struct {
@@ -53,13 +57,32 @@ func (r *racesRepo) List(filter *racing.ListRacesRequestFilter, orderBy *racing.
 	query = getRaceQueries()[racesList]
 
 	query, args = r.applyFilter(query, filter, orderBy)
-
+    // log.Println(query, args)
 	rows, err := r.db.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}
 
 	return r.scanRaces(rows)
+	
+}
+
+func (r *racesRepo) GetRace(req *racing.GetRaceRequest) (*racing.Race, error) {
+	query := getRaceQueries()[racesList]
+
+	query += " WHERE id = " + strconv.FormatInt(req.GetId(), 10)
+
+	rows, err := r.db.Query(query)
+	races, err := r.scanRaces(rows)
+	if err != nil{
+		return nil, err
+	}
+
+	if(len(races) != 1){
+		return nil, nil
+	}
+
+	return races[0], nil
 }
 
 func (r *racesRepo) applyFilter(query string, filter *racing.ListRacesRequestFilter, orderBy *racing.ListRacesRequestOrderBy) (string, []interface{}) {
@@ -80,16 +103,17 @@ func (r *racesRepo) applyFilter(query string, filter *racing.ListRacesRequestFil
 		} 
 	}
 
+	
+
 	// add by Gary Tian
 	if filter.GetVisibleOnly(){
 		clauses = append(clauses, "visible = ?")
 		args = append(args, true /* visible = true*/)
 	}
-
+	
 	if len(clauses) != 0 {
 		query += " WHERE " + strings.Join(clauses, " AND ")
 	}
-	
 	// added order by 
 	colunmNameForOrder := strings.ToLower(orderBy.GetOrderBy())
 	order := strings.ToLower(orderBy.GetOrder())
@@ -97,7 +121,6 @@ func (r *racesRepo) applyFilter(query string, filter *racing.ListRacesRequestFil
 		query += " order by " + colunmNameForOrder+ " " + order
 	}
 	
-	// log.Println("query", query)
 	return query, args
 }
 
