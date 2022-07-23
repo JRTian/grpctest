@@ -18,7 +18,7 @@ type RacesRepo interface {
 	Init() error
 
 	// List will return a list of races.
-	List(filter *racing.ListRacesRequestFilter) ([]*racing.Race, error)
+	List(filter *racing.ListRacesRequestFilter, orderBy *racing.ListRacesRequestOrderBy) ([]*racing.Race, error)
 }
 
 type racesRepo struct {
@@ -43,7 +43,7 @@ func (r *racesRepo) Init() error {
 	return err
 }
 
-func (r *racesRepo) List(filter *racing.ListRacesRequestFilter) ([]*racing.Race, error) {
+func (r *racesRepo) List(filter *racing.ListRacesRequestFilter, orderBy *racing.ListRacesRequestOrderBy) ([]*racing.Race, error) {
 	var (
 		err   error
 		query string
@@ -52,7 +52,7 @@ func (r *racesRepo) List(filter *racing.ListRacesRequestFilter) ([]*racing.Race,
 
 	query = getRaceQueries()[racesList]
 
-	query, args = r.applyFilter(query, filter)
+	query, args = r.applyFilter(query, filter, orderBy)
 
 	rows, err := r.db.Query(query, args...)
 	if err != nil {
@@ -62,12 +62,12 @@ func (r *racesRepo) List(filter *racing.ListRacesRequestFilter) ([]*racing.Race,
 	return r.scanRaces(rows)
 }
 
-func (r *racesRepo) applyFilter(query string, filter *racing.ListRacesRequestFilter) (string, []interface{}) {
+func (r *racesRepo) applyFilter(query string, filter *racing.ListRacesRequestFilter, orderBy *racing.ListRacesRequestOrderBy) (string, []interface{}) {
 	var (
 		clauses []string
 		args    []interface{}
 	)
-
+    log.Println("orderBy", orderBy)
 	if filter == nil {
 		return query, args
 	}
@@ -89,8 +89,56 @@ func (r *racesRepo) applyFilter(query string, filter *racing.ListRacesRequestFil
 	if len(clauses) != 0 {
 		query += " WHERE " + strings.Join(clauses, " AND ")
 	}
-	// log.Println("query", query)
+	
+	// added order by 
+	colunmNameForOrder := strings.ToLower(orderBy.GetOrderBy())
+	order := strings.ToLower(orderBy.GetOrder())
+	if isValidColunm(colunmNameForOrder) && isValidOrder(order){
+		query += " order by " + colunmNameForOrder+ " " + order
+	}
+	
+	log.Println("query", query)
 	return query, args
+}
+
+func isValidOrder(order string)bool{
+    if order == "asc"{
+		return true
+	}
+
+	if order == "desc"{
+		return true
+	}
+
+	return false
+}
+
+func isValidColunm(colunmNameForOrder string)bool{
+	if colunmNameForOrder == "id"{
+		return true
+	}
+
+	if colunmNameForOrder == "meeting_id"{
+		return true
+	}
+
+	if colunmNameForOrder == "name"{
+		return true
+	}
+
+	if colunmNameForOrder == "number"{
+		return true
+	}
+
+	if colunmNameForOrder == "visible"{
+		return true
+	}
+
+	if colunmNameForOrder == "advertised_start_time"{
+		return true
+	}
+
+	return false
 }
 
 func (m *racesRepo) scanRaces(
