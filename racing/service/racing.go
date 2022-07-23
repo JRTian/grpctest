@@ -41,7 +41,7 @@ func (s *racingService) covertRacesToRacesWithStatus(races []*racing.Race) ([]*r
         race := races[i]
 		racesWithStatuItem := &(racing.RaceWithStatus{
 			Id: race.GetId(),
-			MeetingId: race.GetId(),
+			MeetingId: race.GetMeetingId(),
 			Name:race.GetName(),
 			Number:race.GetNumber(),
 			Visible:race.GetVisible(),
