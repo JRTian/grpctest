@@ -6,5 +6,5 @@ implementation:
         curl -X "POST" "http://localhost:8000/v1/list-races" \
             -H 'Content-Type: application/json' \
             -d $'{
-        "filter": {"meeting_ids":["6"], "visibleOnly":true}
+        "filter": {"meeting_ids":["6"], "visible_only":true}
         }'
