@@ -18,6 +18,13 @@ service Racing {
 // Request for ListRaces call.
 message ListRacesRequest {
   ListRacesRequestFilter filter = 1;
+  optional ListRacesRequestOrderBy order_by = 2;
+}
+
+//message for doing ordering by
+message ListRacesRequestOrderBy {
+  string order_by = 3; // column name in race
+  string order = 4;    //asc or desc
 }
 
 // Response to ListRaces call.
