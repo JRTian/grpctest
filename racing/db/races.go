@@ -71,11 +71,10 @@ func (r *racesRepo) applyFilter(query string, filter *racing.ListRacesRequestFil
 	if filter == nil {
 		return query, args
 	}
-	log.Println("init clauses", clauses)
-    log.Println("applyFilter", filter.GetVisibleOnly())
+	
 	if len(filter.MeetingIds) > 0 {
 		clauses = append(clauses, "meeting_id IN ("+strings.Repeat("?,", len(filter.MeetingIds)-1)+"?)")
-        log.Println("clauses", clauses)
+
 		for _, meetingID := range filter.MeetingIds {
 			args = append(args, meetingID)
 		} 
@@ -90,7 +89,7 @@ func (r *racesRepo) applyFilter(query string, filter *racing.ListRacesRequestFil
 	if len(clauses) != 0 {
 		query += " WHERE " + strings.Join(clauses, " AND ")
 	}
-	log.Println("query", query)
+	// log.Println("query", query)
 	return query, args
 }
 
