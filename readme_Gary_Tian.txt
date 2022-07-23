@@ -32,3 +32,12 @@ Task 2. add order by
     "filter": {"meeting_ids":["6"], "visible_only":true},
     "order_by":{"order_by":"advertised_start_time", "order":"ASC"}
     }'
+
+Task 3. add status
+    (1) wrap the original Race type with RaceWithStatus
+    (2) this soluton does not bother the races.go which is the db model
+        the thought is status is as extra column which should be seperated from 
+        the db model struct
+    (3) new return is like
+    {"id":"418","meetingId":"418","name":"Massachusetts black cats","number":"1","visible":false,"advertisedStartTime":"2022-07-22T20:17:43Z","status":"CLOSED"},
+    {"id":"419","meetingId":"419","name":"Arkansas elves","number":"5","visible":false,"advertisedStartTime":"2022-07-25T05:36:55Z","status":"OPEN"}

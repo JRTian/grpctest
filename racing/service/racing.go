@@ -1,6 +1,8 @@
 package service
 
 import (
+	"time"
+	// "log"
 	"git.neds.sh/matty/entain/racing/db"
 	"git.neds.sh/matty/entain/racing/proto/racing"
 	"golang.org/x/net/context"
@@ -27,5 +29,35 @@ func (s *racingService) ListRaces(ctx context.Context, in *racing.ListRacesReque
 		return nil, err
 	}
 
-	return &racing.ListRacesResponse{Races: races}, nil
+	// wrap the races to races with status
+	racesWithStatus := s.covertRacesToRacesWithStatus(races)
+	return &racing.ListRacesResponse{Races: racesWithStatus}, nil
+}
+
+func (s *racingService) covertRacesToRacesWithStatus(races []*racing.Race) ([]*racing.RaceWithStatus) {
+	// copy the input slice
+	var racesWithStatus []*racing.RaceWithStatus
+    for i:=0; i<len(races); i++{
+        race := races[i]
+		racesWithStatuItem := &(racing.RaceWithStatus{
+			Id: race.GetId(),
+			MeetingId: race.GetMeetingId(),
+			Name:race.GetName(),
+			Number:race.GetNumber(),
+			Visible:race.GetVisible(),
+			AdvertisedStartTime:race.GetAdvertisedStartTime(),
+			Status: "",
+		})
+
+		nowInSeconds := time.Now().Unix()
+		if racesWithStatuItem.GetAdvertisedStartTime().GetSeconds() < nowInSeconds{
+			racesWithStatuItem.Status = "CLOSED"
+		}else{
+			racesWithStatuItem.Status = "OPEN"
+		}
+		racesWithStatus = append(racesWithStatus, racesWithStatuItem)
+        // log.Println("racesWithStatuItem ", racesWithStatuItem, nowInSeconds)
+    } 
+
+	return racesWithStatus
 }

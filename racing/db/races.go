@@ -1,7 +1,7 @@
 package db
 
 import (
-	"log"
+	// "log"
 	"database/sql"
 	"github.com/golang/protobuf/ptypes"
 	_ "github.com/mattn/go-sqlite3"
@@ -67,7 +67,7 @@ func (r *racesRepo) applyFilter(query string, filter *racing.ListRacesRequestFil
 		clauses []string
 		args    []interface{}
 	)
-    log.Println("orderBy", orderBy)
+    
 	if filter == nil {
 		return query, args
 	}
@@ -97,7 +97,7 @@ func (r *racesRepo) applyFilter(query string, filter *racing.ListRacesRequestFil
 		query += " order by " + colunmNameForOrder+ " " + order
 	}
 	
-	log.Println("query", query)
+	// log.Println("query", query)
 	return query, args
 }
 
@@ -170,3 +170,4 @@ func (m *racesRepo) scanRaces(
 
 	return races, nil
 }
+
