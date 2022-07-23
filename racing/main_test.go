@@ -66,11 +66,12 @@ func TestOrderBy(t *testing.T) {
 	r := racing.NewRacingClient(cConn)
 	f := &(racing.ListRacesRequestFilter{})
     f.VisibleOnly = new(bool)
-	*f.VisibleOnly = true
+	*f.VisibleOnly = false
+	/*
 	var a[]int64
 	a = append(a, 3)
     f.MeetingIds = a  
-
+    */
 	orderBy := &(racing.ListRacesRequestOrderBy{OrderBy: "advertised_start_time", Order:"ASC"})
     
 	var curentADStartTime *timestamppb.Timestamp

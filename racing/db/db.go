@@ -12,7 +12,8 @@ func (r *racesRepo) seed() error {
 		_, err = statement.Exec()
 	}
 
-	for i := 1; i <= 100; i++ {
+	// added 1000 dummy items to make sure the time is scatted for testing by Gary Tian
+	for i := 1; i <= 1000; i++ {
 		statement, err = r.db.Prepare(`INSERT OR IGNORE INTO races(id, meeting_id, name, number, visible, advertised_start_time) VALUES (?,?,?,?,?,?)`)
 		if err == nil {
 			_, err = statement.Exec(
