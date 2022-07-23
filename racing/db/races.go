@@ -1,7 +1,7 @@
 package db
 
 import (
-	"log"
+	// "log"
 	"database/sql"
 	"github.com/golang/protobuf/ptypes"
 	_ "github.com/mattn/go-sqlite3"
