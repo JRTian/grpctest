@@ -56,3 +56,17 @@ Task 4. get race by id
 
         Response
         {"race":{"id":"1", "meetingId":"5", "name":"North Dakota foes", "number":"2", "visible":false, "advertisedStartTime":"2021-03-03T01:30:57Z", "status":"CLOSED"}}PolyMacs-MBP:api polymac$ 
+
+Task 5. sports service
+    (1) create sports service listing on port 10000
+    (2) create ListEvents interface with a name filter
+    (3) result
+        Request
+        curl -X "POST" "http://localhost:8000/v1/list-events" \
+            -H 'Content-Type: application/json' \
+            -d $'{
+        "filter": {"names":["Connecticut cats"]}
+        }'
+
+        Response
+        {"sports":[{"id":"99","name":"Connecticut cats","advertisedStartTime":"2022-07-25T07:04:34Z"}]}
