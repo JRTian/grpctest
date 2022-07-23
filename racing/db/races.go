@@ -1,6 +1,7 @@
 package db
 
 import (
+	// "log"
 	"database/sql"
 	"github.com/golang/protobuf/ptypes"
 	_ "github.com/mattn/go-sqlite3"
@@ -70,19 +71,25 @@ func (r *racesRepo) applyFilter(query string, filter *racing.ListRacesRequestFil
 	if filter == nil {
 		return query, args
 	}
-
+	
 	if len(filter.MeetingIds) > 0 {
 		clauses = append(clauses, "meeting_id IN ("+strings.Repeat("?,", len(filter.MeetingIds)-1)+"?)")
 
 		for _, meetingID := range filter.MeetingIds {
 			args = append(args, meetingID)
-		}
+		} 
+	}
+
+	// add by Gary Tian
+	if filter.GetVisibleOnly(){
+		clauses = append(clauses, "visible = ?")
+		args = append(args, true /* visible = true*/)
 	}
 
 	if len(clauses) != 0 {
 		query += " WHERE " + strings.Join(clauses, " AND ")
 	}
-
+	// log.Println("query", query)
 	return query, args
 }
 

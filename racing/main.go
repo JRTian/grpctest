@@ -8,7 +8,7 @@ import (
 	"git.neds.sh/matty/entain/racing/service"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
-	"net"
+	"net" 
 )
 
 var (
@@ -54,5 +54,5 @@ func run() error {
 		return err
 	}
 
-	return nil
+    return nil
 }
