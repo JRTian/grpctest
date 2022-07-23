@@ -45,7 +45,8 @@ Task 3. add status
 Task 4. get race by id
     (1) added the new rpc
     (2) updated db model to query race by id
-    (3) result
+    (3) made up the unit test
+    (4) result
         Request
         curl -X "POST" "http://localhost:8000/v1/get-race" \
             -H 'Content-Type: application/json' \
