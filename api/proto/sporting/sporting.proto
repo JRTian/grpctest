@@ -1,0 +1,63 @@
+syntax = "proto3";
+package sporting;
+
+option go_package = "/sporting";
+
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+service Sporting {
+  // ListEvents will return a collection of all races.
+  rpc ListEvents(ListEventsRequest) returns (ListEventsResponse) {
+    option (google.api.http) = { post: "/v1/list-events", body: "*" };
+  }
+}
+
+ 
+
+/* Requests/Responses */
+
+message ListEventsRequest {
+  ListSportsRequestFilter filter = 1;
+}
+
+// Response to ListRaces call.
+message ListEventsResponse {
+  // modified by Gary, keep the original Race
+  repeated Sport sports = 1;
+}
+
+
+// Filter for listing races.
+message ListSportsRequestFilter {
+  repeated string names = 1;
+  
+}
+ 
+/* Resources */
+
+// A race resource.
+message Sport {
+  // ID represents a unique identifier for the race.
+  int64 id = 1;
+  // Name is the official name given to the race.
+  string name = 3;
+  // AdvertisedStartTime is the time the race is advertised to run.
+  google.protobuf.Timestamp advertised_start_time = 6;
+
+}
+
+message SportWithStatus {
+  // ID represents a unique identifier for the race.
+  int64 id = 1;
+  // Name is the official name given to the race.
+  string name = 3;
+  // Number represents the number of the race.
+
+  // AdvertisedStartTime is the time the race is advertised to run.
+  google.protobuf.Timestamp advertised_start_time = 6;
+
+  // added by Gary as the take 3 requiredß
+  string status = 7;
+}
+
